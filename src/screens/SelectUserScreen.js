@@ -30,8 +30,8 @@ import {
 //Customized text
 import MyAppText from "../components/componentStyles/MyAppText";
 //images and icons
-// import BackArrow from "../../assets/backArrow.svg";
-// import NoWifi from "../../assets/noWifi.svg";
+import BackArrow from "../../assets/backArrow.svg";
+import NoWifi from "../../assets/noWifi.svg";
 
 export default function SelectUserScreen({ navigation }) {
   //Getting data from context
@@ -65,6 +65,7 @@ export default function SelectUserScreen({ navigation }) {
       return false;
     }
   };
+  console.log("isConnected", isConnected);
 
   //Const to get states from API
   const [states, setStates] = useState([]);
@@ -426,10 +427,12 @@ export default function SelectUserScreen({ navigation }) {
             style={styles.backPressable}
             onPress={() => navigation.goBack(null)}
           >
-            {/* <BackArrow /> */}
+            <BackArrow />
           </Pressable>
           {!isConnected && (
-            <View style={styles.noWifiIcon}>{/* <NoWifi /> */}</View>
+            <View style={styles.noWifiIcon}>
+              <NoWifi />
+            </View>
           )}
           <View style={styles.headContainer}>
             <Image
