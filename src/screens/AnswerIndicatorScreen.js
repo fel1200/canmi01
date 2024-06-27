@@ -1483,6 +1483,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                 },
               ]}
               editable={indicatorAnswered?.editingAllowed}
+              placeholderTextColor={COLORS.disabled3}
               placeholder="No. de expediente"
               value={inputMethodVerification}
               onChangeText={onChangeValueMethodVerificationInput}
@@ -1504,6 +1505,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                 ]}
                 editable={indicatorAnswered?.editingAllowed}
                 keyboardType="numeric"
+                placeholderTextColor={COLORS.disabled3}
                 placeholder="Edad"
                 value={inputAge}
                 onChangeText={onChangeValueAgeInput}

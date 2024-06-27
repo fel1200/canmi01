@@ -238,17 +238,39 @@ export default function RecordsScreen({ navigation }) {
   //set a var to check if there are items selected
   const [selectedItemsExist, setSelectedItemsExist] = useState(false);
 
-  const onSelectedItemsChange = (selectedItem) => {
+  const onSelectedItemsChange = (selectedItem, newValue) => {
     const index = selectedItems.indexOf(selectedItem);
-    if (index === -1) {
-      //add item to array
-      setSelectedItems([...selectedItems, selectedItem]);
-    } else {
-      setSelectedItems(selectedItems.filter((item) => item !== selectedItem));
+    //Cleaning the selectedItems array because only one item can be selected
+    setSelectedItems([]);
+    //Only one element can be selected
+    const recordsTemp = records.map((record) => {
+      if (record.id === selectedItem.id) {
+        return { ...record, selected: !record.selected };
+      } else {
+        return { ...record, selected: false };
+      }
+    });
+
+    //get value of record
+    const recordToSelect = recordsTemp.find(
+      (record) => record.id === selectedItem.id
+    );
+    //if value is true, add to selectedItems
+    if (recordToSelect.selected) {
+      setSelectedItems([selectedItem]);
     }
+
+    console.log("record", records);
+    setRecords(recordsTemp);
+    setFilteredRecords(recordsTemp);
+
+    // if (index === -1) {
+    //   setSelectedItems([selectedItem]);
+    // }
   };
   //useEffect to check if there are items selected
   useEffect(() => {
+    console.log("selectedItems", selectedItems);
     if (selectedItems.length > 0) {
       setSelectedItemsExist(true);
     } else {
@@ -297,8 +319,6 @@ export default function RecordsScreen({ navigation }) {
         statusItemsSend !== undefined &&
         statusItemsSend !== null
       ) {
-        setSelectedItems([]);
-
         //update status in records
         const recordsTemp = records.map((record) => {
           const itemStatus = statusItemsSend.find(
@@ -340,6 +360,7 @@ export default function RecordsScreen({ navigation }) {
     const selectedItemsSending = selectedItems.filter(
       (item) => item.status === 99
     );
+    console.log(selectedItemsSending);
     //Going through selectedItems array,
     //and sending each item to api
     for (let i = 0; i < selectedItemsSending.length; i++) {
@@ -368,10 +389,11 @@ export default function RecordsScreen({ navigation }) {
           });
         }
       } catch (error) {
+        console.log("Throw error desde recordScreen", error);
         const item = selectedItems[i];
 
         //Print an axios error
-        console.log("error axios", error.response.data);
+        console.log("error axios", error?.message);
         console.log("id", item.id, "status", 2);
         //update status in selectedItemsSend
         statusItemsSend.map((itemSend) => {
@@ -382,7 +404,7 @@ export default function RecordsScreen({ navigation }) {
 
         setIsSending(false);
         setSendingError(`Error al enviar cuestionarios
-          ${error?.response?.data?.message}
+          ${error?.message}
           `);
         setModalVisible(false);
         setErrorLoadingIndicators(error);
@@ -612,6 +634,9 @@ export default function RecordsScreen({ navigation }) {
   const [loadingIndicatorCreateFile, setLoadingIndicatorCreateFile] =
     useState(false);
   const [modalVisibleCreateFile, setModalVisibleCreateFile] = useState(false);
+
+  console.log("SelectedItemsExist", selectedItemsExist);
+  console.log("loadingIndicatorSend", loadingIndicatorSend);
 
   return (
     <KeyboardAvoidingView style={styles.bg}>

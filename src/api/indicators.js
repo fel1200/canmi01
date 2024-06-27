@@ -1777,7 +1777,7 @@ export async function sendIndicator(record, userApp) {
 
   let questionsToSend = [];
   let newQuestion = {};
-
+  console.log("Antes de enviar: ", record);
   record.questions.forEach((question) => {
     newQuestion = {
       device_id: record.id,
@@ -1807,27 +1807,34 @@ export async function sendIndicator(record, userApp) {
     // }
     questionsToSend.push(newQuestion);
   });
-
+  console.log("Después de generar: ", questionsToSend);
   try {
+    console.log("Entramos al try");
     token = await getToken(userApp);
     if (token == undefined || token == null) {
       throw Error("Error en token");
     }
     const url = `${API_HOST_RECORDS}`;
+    console.log("URL: ", url);
+    console.log("Token: ", token);
     //send each question in questionsToSend
     let bodyToSend = [];
     for (let i = 0; i < questionsToSend.length; i++) {
       bodyToSend.push(questionsToSend[i]);
       //send in axios with token
       const config = {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
+      console.log("Body to send: ", bodyToSend);
       const response = await axios.put(url, bodyToSend, config);
-      const result = response.data;
-      //update status in questionsToSend whith the result
+      console.log("Response sendindicator", response);
+      const result = response?.data;
+      console.log("Result: ", result);
+      //update status in questionsToSend with the result
       questionsToSend[i].status = result.status;
       //Clean array before sending next
       bodyToSend = [];
@@ -1849,6 +1856,7 @@ export async function sendIndicator(record, userApp) {
       throw Error("Error en envÃ­o de datos");
     }
   } catch (error) {
+    console.log("Thrown error desde sendIndicator: ", error);
     throw error;
   }
 }
@@ -1857,24 +1865,42 @@ export async function sendIndicator(record, userApp) {
 export async function getToken(userApp) {
   try {
     //First we check if we have a token in secure store
+    console.log("Entramos a getToken");
     const token = await SecureStore.getItemAsync("token");
+    // const token = "faketoken";
+
+    console.log("Token: ", token);
     if (token !== null && token !== undefined) {
       //If we have a token, we check if it is valid
+      console.log("Entró a validación de token");
       const tokenIsValid = await checkTokenIsValid(token);
+      console.log("Token es válido: ", tokenIsValid);
       if (tokenIsValid) {
         //If token is valid, we return it
         return token;
       } else {
         //If token is not valid, we get a new one
+
         const tokenNew = await getNewToken(userApp);
-        return tokenNew;
+        console.log("Token nuevo: ", tokenNew);
+        if (tokenNew === null || tokenNew === undefined) {
+          throw Error("Error en generación de token");
+        } else {
+          return tokenNew;
+        }
       }
     } else {
       //If we don't have a token, we get a new one
       const tokenNew = await getNewToken(userApp);
-      return tokenNew;
+      //Check if throw an error then throw it
+      if (tokenNew === null || tokenNew === undefined) {
+        throw Error("Error en generación de token");
+      } else {
+        return tokenNew;
+      }
     }
   } catch (error) {
+    console.log("Error thrown ", error);
     throw error;
   }
 }
@@ -1912,13 +1938,17 @@ export async function getNewToken(userApp) {
         password: userApp.password,
       }),
     });
+    console.log("Entró a generar new token", API_HOST_TOKEN);
     const responseJson = await response.json();
+    console.log("Respuesta: ", responseJson);
+
     if (responseJson.status === 200) {
       //We save the token in secure store
       await SecureStore.setItemAsync("token", responseJson?.data?.token);
       return responseJson?.data?.token;
     } else {
-      return null;
+      console.log("Error en generación de token");
+      throw Error("Error en generación de token");
     }
   } catch (error) {
     throw error;

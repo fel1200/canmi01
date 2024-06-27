@@ -42,30 +42,42 @@ export default function SelectUserScreen({ navigation }) {
   const [errorApi, setErrorApi] = useState(undefined);
 
   //Var to check if there is internet connection
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
+
+  //var to check if it was tried the connection
+  const [triedConnection, setTriedConnection] = useState(false);
 
   //Check if there is internet connection
-  useEffect(() => {
-    (async () => {
-      const isConnectedCheck = await checkInternetConnection();
-      //setIsConnected(isConnectedCheck);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const isConnectedCheck = await checkInternetConnection();
+  //     setIsConnected(isConnectedCheck);
+  //   })();
+  // }, []);
 
   //Method to check internet connection
   const checkInternetConnection = async () => {
     try {
       const response = await fetch("https://www.google.com");
+      // const contentType = response.headers.get("content-type");
+      // const raw = await response.blob();
+      // console.log("Raw", raw);
+      // console.log("Content type", contentType);
+
+      // console.log("Response", response);
+      console.log("Status", response.status);
       if (response.status === 200) {
+        console.log("Entró");
         return true;
       } else {
         return false;
       }
     } catch (error) {
+      console.log("Error to check internet connection", error);
       return false;
     }
   };
-  console.log("isConnected", isConnected);
+  // console.log("isConnected", isConnected);
 
   //Const to get states from API
   const [states, setStates] = useState([]);
@@ -74,6 +86,11 @@ export default function SelectUserScreen({ navigation }) {
   // Getting states from API
   useEffect(() => {
     (async () => {
+      //Check if there is internet connection
+      if (triedConnection == false) {
+        const isConnected = await checkInternetConnection();
+        setIsConnected(isConnected);
+      }
       setLoadingStates(true);
       await loadStates();
       //Check if there is a userApp saved in local storage
@@ -94,7 +111,7 @@ export default function SelectUserScreen({ navigation }) {
         console.log("Error to get userApp from storage", error);
       }
     })();
-  }, []);
+  }, [triedConnection]);
 
   //To get states from API or local
   const loadStates = async () => {
@@ -115,6 +132,9 @@ export default function SelectUserScreen({ navigation }) {
       setStates(statesApi);
     } catch (error) {
       console.log("Error to get states data from the api", error);
+      //trying to get data from local
+      setIsConnected(false);
+      setTriedConnection(true);
     } finally {
       setLoadingStates(false);
     }
@@ -158,13 +178,18 @@ export default function SelectUserScreen({ navigation }) {
 
   //still municipalities
   //method to get municipalities by state
+  //only when selectedState changes we get the municipalities
   useEffect(() => {
     (async () => {
+      if (selectedState === undefined) {
+        return;
+      }
       setLoadingMunicipalities(true);
       await loadMunicipalities();
     })();
   }, [selectedState]);
 
+  //console.log("selectedState", selectedState);
   const loadMunicipalities = async () => {
     try {
       const data = await getMunicipalities(selectedState, isConnected);
@@ -214,6 +239,9 @@ export default function SelectUserScreen({ navigation }) {
   //method to get clinics by state
   useEffect(() => {
     (async () => {
+      if (selectedState === undefined || selectedMunicipality === undefined) {
+        return;
+      }
       setLoadingClinics(true);
       await loadClinics();
     })();
@@ -626,6 +654,7 @@ export default function SelectUserScreen({ navigation }) {
                   ]}
                   editable={true}
                   placeholder="Nombre(s) de usuario"
+                  placeholderTextColor={COLORS.disabled3}
                   value={inputName}
                   onChangeText={onChangeNameInput}
                   autoCorrect={false}
@@ -640,6 +669,7 @@ export default function SelectUserScreen({ navigation }) {
                     },
                   ]}
                   editable={true}
+                  placeholderTextColor={COLORS.disabled3}
                   placeholder="Apellido 1"
                   value={inputLastName}
                   onChangeText={onChangeLastNameInput}
@@ -655,6 +685,7 @@ export default function SelectUserScreen({ navigation }) {
                     },
                   ]}
                   editable={true}
+                  placeholderTextColor={COLORS.disabled3}
                   placeholder="Apellido 2"
                   value={inputLastName2}
                   onChangeText={onChangeLastNameInput2}

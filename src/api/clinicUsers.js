@@ -1,5 +1,7 @@
 import { API_HOST_USERS, API_HOST } from "../utils/constants";
 
+import axios from "axios";
+
 //This huge var is used in the case app can't connect to internet
 //So, user is available to execute it offline
 //The app doesn't have login functionality, so we need some generic users
@@ -109337,12 +109339,13 @@ const clues = [
     "NOMBRE DE LA UNIDAD": "CESSA PINOS",
   },
 ];
+
 const genericUsers = [
   {
     idUser: 1,
     name: "Usuario 1",
     user: "usuario1@correo.com",
-    password: "CrU0r!yO6oc+@r$6RONU",
+    password: "zlw91ineh2qU3uS-@9+$",
   },
   {
     idUser: 2,
@@ -109367,11 +109370,25 @@ const genericUsers = [
 //Function to getStates from internet or locally
 export async function getStates(isConnected) {
   try {
+    console.log("Getting entities, isConnected", isConnected);
     //If it's connected, then we get the data from internet
     if (isConnected) {
       const url = `${API_HOST}federative_entity`;
+      console.log("url de entidades", url);
       const response = await fetch(url);
+      console.log("Response in entities", response);
       const result = response.json();
+      console.log("Result in entities", result);
+      // return result;
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // };
+      // const response = await axios.get(url, config);
+      // console.log("Response in entities", response);
+      // const result = response.json();
+
       return result;
     } else {
       //Getting data from clues var
@@ -109401,6 +109418,7 @@ export async function getMunicipalities(state, isConnected) {
     //Check if is it connected or not
     if (isConnected) {
       const url = `${API_HOST}municipality/${state}`;
+      console.log("url municipalities", url);
       const response = await fetch(url);
       const result = response.json();
       return result;

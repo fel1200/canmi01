@@ -51,8 +51,12 @@ export const textPercentage = (percentage) => {
 
 //URLS to fetch data
 //General api host
-export const API_HOST = "https://devdcm.com/";
+//export const API_HOST = "https://devdcm.com/";
+export const API_HOST = "https://devfactorydcm.com/";
 //send record
-export const API_HOST_RECORDS = "https://devdcm.com/indicator_answer/create";
+//export const API_HOST_RECORDS = "https://devdcm.com/indicator_answer/create";
+export const API_HOST_RECORDS =
+  "https://devfactorydcm.com/indicator_answer/create";
 //get info from token to get session
-export const API_HOST_TOKEN = "https://devdcm.com/auth/signin";
+//export const API_HOST_TOKEN = "https://devdcm.com/auth/signin";
+export const API_HOST_TOKEN = "https://devfactorydcm.com/auth/signin";

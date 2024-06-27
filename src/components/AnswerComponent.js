@@ -369,6 +369,7 @@ export default function AnswerComponent(props) {
                         editable={isEditingAllowed()}
                         keyboardType="numeric"
                         idQuestion={item.idQuestion}
+                        placeholderTextColor={COLORS.disabled3}
                         placeholder={
                           possibleAnswer.placeholder
                             ? possibleAnswer.placeholder
@@ -623,6 +624,7 @@ export default function AnswerComponent(props) {
                     },
                   ]}
                   placeholder={item.Question}
+                  placeholderTextColor={COLORS.disabled3}
                   onChangeText={(text) =>
                     onChangeTextSingle(item.idQuestion, text)
                   }

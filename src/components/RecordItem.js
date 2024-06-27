@@ -47,9 +47,9 @@ export default function RecordItem(props) {
   };
 
   //Checkbox
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  //const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const onPressCheckBox = (newValue) => {
-    setToggleCheckBox(newValue);
+    //setToggleCheckBox(newValue);
     onSelectedItemsChange(item);
   };
 
@@ -67,7 +67,7 @@ export default function RecordItem(props) {
             {item.status === 0 || item.status === 2 ? (
               <Checkbox
                 disabled={false}
-                value={toggleCheckBox}
+                value={item?.selected}
                 onValueChange={(newValue) => onPressCheckBox(newValue)}
                 ColorValue={COLORS.secondary1}
               />
