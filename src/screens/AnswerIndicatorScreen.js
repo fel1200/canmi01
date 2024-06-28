@@ -253,6 +253,22 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
             });
           });
 
+          //method to update answerValue to "999" of idIndicator 1, and
+          //idQuestion 4, 5 6
+          if (indicatorActiveApp.idIndicator === 1) {
+            indicatorActiveApp.questions.forEach((question) => {
+              if (question.idQuestion === 4) {
+                question.answerValue = "999";
+              }
+              if (question.idQuestion === 5) {
+                question.answerValue = "999";
+              }
+              if (question.idQuestion === 6) {
+                question.answerValue = "999";
+              }
+            });
+          }
+
           //We start an indicator answered from zero
           //first general structure
           const idForAnswers = uuid.v4();

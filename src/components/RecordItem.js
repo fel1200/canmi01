@@ -50,7 +50,7 @@ export default function RecordItem(props) {
   //const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const onPressCheckBox = (newValue) => {
     //setToggleCheckBox(newValue);
-    onSelectedItemsChange(item);
+    onSelectedItemsChange(item, newValue);
   };
 
   //render

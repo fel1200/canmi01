@@ -109347,24 +109347,24 @@ const genericUsers = [
     user: "usuario1@correo.com",
     password: "zlw91ineh2qU3uS-@9+$",
   },
-  {
-    idUser: 2,
-    name: "Usuario 2",
-    user: "usuario2@correo.com",
-    password: "ka8R#F+CriDr0#R@TrA2",
-  },
-  {
-    idUser: 3,
-    name: "Usuario 3",
-    user: "usuario3@correo.com",
-    password: "20apHi&?tH-f7t9=s@If",
-  },
-  {
-    idUser: 4,
-    name: "Usuario 4",
-    user: "usuario4@correo.com",
-    password: "zlw91ineh2qU3uS-@9+$",
-  },
+  // {
+  //   idUser: 2,
+  //   name: "Usuario 2",
+  //   user: "usuario2@correo.com",
+  //   password: "ka8R#F+CriDr0#R@TrA2",
+  // },
+  // {
+  //   idUser: 3,
+  //   name: "Usuario 3",
+  //   user: "usuario3@correo.com",
+  //   password: "20apHi&?tH-f7t9=s@If",
+  // },
+  // {
+  //   idUser: 4,
+  //   name: "Usuario 4",
+  //   user: "usuario4@correo.com",
+  //   password: "zlw91ineh2qU3uS-@9+$",
+  // },
 ];
 
 //Function to getStates from internet or locally

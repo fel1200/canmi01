@@ -1791,7 +1791,7 @@ export async function sendIndicator(record, userApp) {
       indicator_id: record.idIndicator,
       color: record.color,
       question_id: question.idQuestion,
-      answer_option: question.answerOption ? question.answerOption : null,
+      answer_option: question.answerOption ? question.answerOption : 0,
       answer_value: question.answerValue,
       error_in_save: "",
       error_in_send: "",
@@ -1823,7 +1823,7 @@ export async function sendIndicator(record, userApp) {
       bodyToSend.push(questionsToSend[i]);
       //send in axios with token
       const config = {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -1853,7 +1853,7 @@ export async function sendIndicator(record, userApp) {
       };
     } else {
       //Throw an error
-      throw Error("Error en envÃ­o de datos");
+      throw Error("Error en enví­o de datos");
     }
   } catch (error) {
     console.log("Thrown error desde sendIndicator: ", error);
