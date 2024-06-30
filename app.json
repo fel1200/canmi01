@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fel1200.canmi01"
+      "bundleIdentifier": "com.fel1200.canmi03"
     },
     "android": {
       "adaptiveIcon": {

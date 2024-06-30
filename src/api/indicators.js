@@ -1890,6 +1890,7 @@ export async function getToken(userApp) {
         }
       }
     } else {
+      console.log("No hay token");
       //If we don't have a token, we get a new one
       const tokenNew = await getNewToken(userApp);
       //Check if throw an error then throw it
@@ -1928,17 +1929,35 @@ export async function checkTokenIsValid(token) {
 //Method to get a new token
 export async function getNewToken(userApp) {
   try {
-    const response = await fetch(API_HOST_TOKEN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: userApp.user,
-        password: userApp.password,
-      }),
-    });
-    console.log("Entró a generar new token", API_HOST_TOKEN);
+    console.log("Antes del nuevo token", userApp);
+    console.log("API_HOST_TOKEN", API_HOST_TOKEN);
+    console.log(
+      "Body",
+      JSON.stringify({ email: userApp.user, password: userApp.password })
+    );
+
+    //Connection that works in android
+    // const response = await axios.post(API_HOST_TOKEN, {
+    //   email: userApp.user,
+    //   password: userApp.password,
+    // });
+
+    // const response = await fetch(API_HOST_TOKEN, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email: userApp.user,
+    //     password: userApp.password,
+    //   }),
+    // });
+    // console.log("Entró a generar new token", API_HOST_TOKEN);
+    // const responseJson = await response.json();
+    // console.log("Respuesta: ", responseJson);
+
+    const url = `${API_HOST_TOKEN}`;
+    const response = await fetch(url);
     const responseJson = await response.json();
     console.log("Respuesta: ", responseJson);
 
