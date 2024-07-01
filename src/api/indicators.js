@@ -1936,30 +1936,30 @@ export async function getNewToken(userApp) {
       JSON.stringify({ email: userApp.user, password: userApp.password })
     );
 
-    //Connection that works in android
+    //// Connection that works in android
     // const response = await axios.post(API_HOST_TOKEN, {
     //   email: userApp.user,
     //   password: userApp.password,
     // });
 
-    // const response = await fetch(API_HOST_TOKEN, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     email: userApp.user,
-    //     password: userApp.password,
-    //   }),
-    // });
-    // console.log("Entró a generar new token", API_HOST_TOKEN);
-    // const responseJson = await response.json();
-    // console.log("Respuesta: ", responseJson);
-
-    const url = `${API_HOST_TOKEN}`;
-    const response = await fetch(url);
+    const response = await fetch(API_HOST_TOKEN, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: userApp.user,
+        password: userApp.password,
+      }),
+    });
+    console.log("Entró a generar new token", API_HOST_TOKEN);
     const responseJson = await response.json();
     console.log("Respuesta: ", responseJson);
+
+    // const url = `${API_HOST_TOKEN}`;
+    // const response = await fetch(url);
+    // const responseJson = await response.json();
+    // console.log("Respuesta: ", responseJson);
 
     if (responseJson.status === 200) {
       //We save the token in secure store

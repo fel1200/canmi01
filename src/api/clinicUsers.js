@@ -109375,7 +109375,20 @@ export async function getStates(isConnected) {
     if (isConnected) {
       const url = `${API_HOST}federative_entity`;
       console.log("url de entidades", url);
-      const response = await fetch(url);
+      //const response = await fetch(url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "'multipart/form-data'",
+        },
+        // body: JSON.stringify({
+        //   email: userApp.user,
+        //   password: userApp.password,
+        // }),
+      });
+
       console.log("Response in entities", response);
       const result = response.json();
       console.log("Result in entities", result);
@@ -109408,6 +109421,7 @@ export async function getStates(isConnected) {
       return result;
     }
   } catch (error) {
+    console.log("Error request entidades", error);
     throw error;
   }
 }

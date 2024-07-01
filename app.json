@@ -13,7 +13,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fel1200.canmi03"
+      "bundleIdentifier": "com.fel1200.canmi01",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,11 +34,21 @@
         "projectId": "4e0f2529-bb3b-447a-a1aa-cded305af4d0"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "exposdk:41.0.0",
+
     "updates": {
       "url": "https://u.expo.dev/4e0f2529-bb3b-447a-a1aa-cded305af4d0"
-    }
+    },
+
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
   }
 }
