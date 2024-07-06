@@ -18,7 +18,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 //Context info
 import useApp from "../hooks/useApp.js";
 //Get info from API
-import { getTypesAge } from "../api/indicators.js";
+import { getTypesAge, getTypesGender } from "../api/indicators.js";
 //Components
 import QuestionItem from "../components/QuestionItem.js";
 //Colors
@@ -85,6 +85,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
           let numberMethodVerificationAnswerValue = "";
           let ageAnswerValue = "";
           let typeAgeAnswerValue = "";
+          let typeGenderAnswerValue = "";
           //Getting numbers of state, municipality, clinic and user, to use in several steps
           const idStateNumber = isNaN(stateApp.value)
             ? 0
@@ -146,13 +147,23 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
               if (typeAgePrevious !== undefined) {
                 typeAgeAnswerValue = typeAgePrevious.answerValue;
               }
+
+              const typeGenderPrevious =
+                indicatorAnsweredSameStageLast.questions.find(
+                  (question) => question.idQuestion === 106
+                );
+              if (typeGenderPrevious !== undefined) {
+                typeGenderAnswerValue = typeGenderPrevious.answerValue;
+              }
+
               //   //We set the values of the inputs and dropdowns
             }
             //first check if we colleted data
             if (
               numberMethodVerificationAnswerValue !== "" &&
               ageAnswerValue !== "" &&
-              typeAgeAnswerValue !== ""
+              typeAgeAnswerValue !== "" &&
+              (typeGenderAnswerValue !== "" || typeAgeAnswerValue == undefined)
             ) {
               //We ask the user if he wants to use the data through a modal
               Alert.alert(
@@ -170,6 +181,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                         setInputMethodVerification("");
                         setInputAge("");
                         setTypeAge("");
+                        setTypeGender("");
                       }
                     },
                     style: "cancel",
@@ -226,6 +238,22 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
             answerOption: "",
             answerValue: typeAgeAnswerValue,
           });
+          //Solo preguntamos el género para niños y niñas del indicador 9 para arriba
+          if (indicatorActiveApp.idIndicator >= 9) {
+            console.log("IndicatorActiveApp", indicatorActiveApp);
+            //type of age
+            questionsArray.push({
+              idQuestion: 106, //We define this high number to avoid conflicts with the id of the questions
+              question: "Sexo",
+              forCalculation: false,
+              enabled: true,
+              subindicator: 0,
+              nameSubindicator: "",
+              possibleAnswers: [],
+              answerOption: "",
+              answerValue: typeGenderAnswerValue,
+            });
+          }
 
           //Then we fill with the questions of the indicator template
           indicatorActiveApp.questions.forEach((question) => {
@@ -348,6 +376,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
   const [inputAge, setInputAge] = useState("");
   //Values for dropdowns
   const [typeAge, setTypeAge] = useState([]);
+  const [typeGender, setTypeGender] = useState([]);
 
   //Methods to handle changes in method verification and age
   const onChangeValueMethodVerificationInput = (value) => {
@@ -438,6 +467,40 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
     })();
   }, []);
 
+  //Values and methods for the dropdown picker of the type gender (M, F)
+  const [typesGender, setTypesGender] = useState([]);
+  const [typeGenderOpen, setTypeGenderOpen] = useState(false);
+  const [loadingTypesGender, setLoadingTypesGender] = useState(false);
+  const [errorLoadingTypesGender, setErrorLoadingTypesGender] =
+    useState(undefined);
+
+  //Effect to load the types of age in the dropdown
+  useEffect(() => {
+    (async () => {
+      //clear storage disabled, activate only for development
+      //AsyncStorage.clear();
+      setLoadingTypesGender(true);
+      setErrorLoadingTypesGender(false);
+      try {
+        const typeGenderApi = await getTypesGender();
+        const typeGenderList = [];
+        typeGenderApi.forEach((typeGender) => {
+          typeGenderList.push({
+            label: typeGender.nameTypeGender,
+            value: typeGender.idTypeGender,
+          });
+        });
+
+        setTypesGender(typeGenderList);
+      } catch (error) {
+        setErrorLoadingTypesGender(true);
+        console.log("Error loading TypeGender", error);
+      } finally {
+        setLoadingTypesGender(false);
+      }
+    })();
+  }, []);
+
   //Method to handle changes in answers
   const onChangeValueAnswer = (statusAnswers) => {
     setLastChangesSaved(false);
@@ -458,7 +521,26 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
     }
   };
 
+  const onChangeValueTypeGender = (value) => {
+    if (value !== null) {
+      const statusAnswersNew = indicatorAnswered?.questions?.map(
+        (statusAnswer) => {
+          if (statusAnswer.idQuestion === 106) {
+            statusAnswer.answerValue = value;
+          }
+          return statusAnswer;
+        }
+      );
+      onChangeValueAnswer(statusAnswersNew);
+    }
+  };
+
   const onTypeAgeOpen = useCallback(() => {
+    if (indicatorAnswered?.editingAllowed === false) {
+    }
+  }, []);
+
+  const onTypeGenderOpen = useCallback(() => {
     if (indicatorAnswered?.editingAllowed === false) {
     }
   }, []);
@@ -1576,7 +1658,8 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                   ]}
                 />
               </View>
-
+            </View>
+            <View style={styles.methodVerificationContainerUp}>
               {errorLoadingTypesAge && (
                 <MyAppText style={styles.textError} typeFont="Regular">
                   Error cargar tipo de edad
@@ -1588,6 +1671,64 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
         <View style={styles.line} />
         <View style={styles.indicatorContainer}>
           <View style={styles.indicatorContainerUp}>
+            {
+              //Print dropdownpicker when
+              indicatorActiveApp.idIndicator >= 9 && (
+                <View>
+                  <DropDownPicker
+                    style={[
+                      styles.pickerGender,
+                      {
+                        marginTop: 8,
+                        zIndex: 98,
+                        backgroundColor: indicatorAnswered?.editingAllowed
+                          ? COLORS.disabled1
+                          : COLORS.disabled2,
+                      },
+                    ]}
+                    listMode="SCROLLVIEW"
+                    open={typeGenderOpen}
+                    onOpen={onTypeGenderOpen}
+                    value={typeGender}
+                    items={typesGender}
+                    setOpen={setTypeGenderOpen}
+                    setValue={setTypeGender}
+                    setItems={setTypeGender}
+                    onChangeValue={onChangeValueTypeGender}
+                    zIndex={undefined}
+                    elevation={undefined}
+                    dropDownDirection="top"
+                    closeOnBackPressed={true}
+                    activityIndicatorColor={COLORS.tertiary1}
+                    activityIndicatorSize={30}
+                    language="ES"
+                    textStyle={{
+                      fontSize: 14,
+                      color: indicatorAnswered?.editingAllowed
+                        ? COLORS.secondary1
+                        : COLORS.disabled3,
+                    }}
+                    placeholder="Sexo"
+                    placeholderStyle={{
+                      color: COLORS.secondary2,
+                    }}
+                    searchable={false}
+                    containerStyle={[
+                      styles.containerPickerGender,
+                      { zIndex: 99 },
+                    ]}
+                    autoScroll={true}
+                    dropDownContainerStyle={[
+                      styles.dropDownContainerStyle,
+                      {
+                        zIndex: 99,
+                      },
+                    ]}
+                  />
+                </View>
+              )
+            }
+
             <MyAppText style={styles.textTitleQuestions} typeFont="Regular">
               Preguntas
             </MyAppText>
@@ -1638,7 +1779,8 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                         item.idQuestion !== 102 &&
                         item.idQuestion !== 103 &&
                         item.idQuestion !== 104 &&
-                        item.idQuestion !== 105
+                        item.idQuestion !== 105 &&
+                        item.idQuestion !== 106
                     )
                     ?.map((item) => (
                       <QuestionItem
@@ -1738,13 +1880,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   methodVerificationContainer: {
+    flexDirection: "column",
     height: 60,
     width: "100%",
     borderRadius: 8,
     zIndex: 98,
   },
   methodVerificationContainerUp: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
     zIndex: 99,
@@ -1771,6 +1913,19 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     color: COLORS.white,
   },
+
+  containerPickerGender: {
+    width: 120,
+  },
+  pickerGender: {
+    width: 120,
+    borderRadius: 12,
+    borderWidth: 0,
+    marginTop: 4,
+    marginLeft: 2,
+    color: COLORS.white,
+  },
+
   dropDownContainerStyle: {
     marginTop: 4,
     marginLeft: 8,
@@ -1831,18 +1986,20 @@ const styles = StyleSheet.create({
     zIndex: 94,
   },
   indicatorContainerUp: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    height: 40,
+    height: 80,
     backgroundColor: COLORS.backgroundApp,
     backgroundColor: COLORS.secondary3,
+    zIndex: 97,
   },
   textTitleQuestions: {
     margin: 4,
     fontSize: 14,
     color: COLORS.backgroundApp,
     borderRadius: 8,
+    zIndex: -1,
   },
   textInstructions: {
     margin: 4,

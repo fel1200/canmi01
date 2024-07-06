@@ -203,6 +203,67 @@ export default function AnswerComponent(props) {
           });
           onChangeValueAnswer(newStatusAnswers);
         }
+      } else if (indicatorAnswered.idIndicator === 1 && idQuestion === 4) {
+        //questions 5, 6, 7 y 9 enabled
+        let valueEnabled = false;
+        if (idPossibleAnswer === "1") {
+          valueEnabled = true;
+        } else {
+          valueEnabled = false;
+        }
+        console.log("Value enabled: ", valueEnabled);
+        console.log("idPossibleAnswer", idPossibleAnswer);
+        const questionsEnabled = indicatorAnswered.questions.map((question) => {
+          if (question.idQuestion === 5) {
+            question.enabled = valueEnabled;
+          }
+          // if (question.idQuestion === 6) {
+          //   question.enabled = valueEnabled;
+          // }
+          if (question.idQuestion === 7) {
+            if (valueEnabled === false) {
+              question.answerOption = "999";
+            }
+            question.enabled = valueEnabled;
+          }
+          if (question.idQuestion === 9) {
+            if (valueEnabled === false) {
+              question.answerOption = "999";
+            }
+            question.enabled = valueEnabled;
+          }
+          return question;
+        });
+
+        const newStatusAnswers = indicatorAnswered.questions.map((item) => {
+          if (item.idQuestion === idQuestion) {
+            return {
+              ...item,
+              answerOption: idPossibleAnswer,
+              answerValue: "",
+              possibleAnswers: item.possibleAnswers.map((possibleAnswer) => {
+                if (possibleAnswer.key !== idPossibleAnswer) {
+                  return {
+                    ...possibleAnswer,
+                    checked: false,
+                  };
+                } else {
+                  return {
+                    ...possibleAnswer,
+                    checked: !possibleAnswer.checked,
+                  };
+                }
+              }),
+            };
+          } else {
+            return item;
+          }
+        });
+        setIndicatorAnswered({
+          ...indicatorAnswered,
+          questions: questionsEnabled,
+        });
+        onChangeValueAnswer(newStatusAnswers);
       } else {
         const newStatusAnswers = indicatorAnswered.questions.map((item) => {
           if (item.idQuestion === idQuestion) {
@@ -262,9 +323,59 @@ export default function AnswerComponent(props) {
   const onChangeText = (idQuestion, idPossibleAnswer, newValue) => {
     if (indicatorAnswered !== undefined) {
       if (indicatorAnswered.idIndicator === 1 && idQuestion === 1) {
+        console.log("Entró a revisar IMC");
         //First check if its a number and then obtain the float value of the answer
         const valueAnswerQuestion1 = isNaN(newValue) ? 0 : parseFloat(newValue);
-        if (valueAnswerQuestion1 >= 27) {
+        if (valueAnswerQuestion1 >= 27 && valueAnswerQuestion1 < 30) {
+          //We enable question 4 in indicatorAnswered
+          const questionsEnabled = indicatorAnswered.questions.map(
+            (question) => {
+              if (question.idQuestion === 4) {
+                question.enabled = true;
+              }
+
+              if (question.idQuestion === 8) {
+                question.enabled = false;
+              }
+              // if (question.idQuestion === 6) {
+              //   question.enabled = true;
+              // }
+              return question;
+            }
+          );
+          setIndicatorAnswered({
+            ...indicatorAnswered,
+            questions: questionsEnabled,
+          });
+        } else if (valueAnswerQuestion1 < 27) {
+          //We check if the questions are enabled equal to false, then
+          //values are "999"
+          const questionsEnabled = indicatorAnswered.questions.map(
+            (question) => {
+              if (question.idQuestion === 4) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 5) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 7) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 9) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              return question;
+            }
+          );
+          setIndicatorAnswered({
+            ...indicatorAnswered,
+            questions: questionsEnabled,
+          });
+        } else if (valueAnswerQuestion1 >= 30 && valueAnswerQuestion1 < 40) {
           //We enable question 4, 5 y 6 in indicatorAnswered
           const questionsEnabled = indicatorAnswered.questions.map(
             (question) => {
@@ -274,9 +385,45 @@ export default function AnswerComponent(props) {
               if (question.idQuestion === 5) {
                 question.enabled = true;
               }
-              if (question.idQuestion === 6) {
+              if (question.idQuestion === 7) {
                 question.enabled = true;
               }
+              if (question.idQuestion === 9) {
+                question.enabled = true;
+              }
+
+              return question;
+            }
+          );
+          setIndicatorAnswered({
+            ...indicatorAnswered,
+            questions: questionsEnabled,
+          });
+        } else if (valueAnswerQuestion1 >= 40) {
+          //We enable question 4, 5 y 6 in indicatorAnswered
+          const questionsEnabled = indicatorAnswered.questions.map(
+            (question) => {
+              if (question.idQuestion === 4) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 5) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 7) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 8) {
+                question.enabled = true;
+                // question.answerOption = "999";
+              }
+              if (question.idQuestion === 9) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+
               return question;
             }
           );
@@ -290,13 +437,25 @@ export default function AnswerComponent(props) {
             (question) => {
               if (question.idQuestion === 4) {
                 question.enabled = false;
+                question.answerOption = "999";
               }
               if (question.idQuestion === 5) {
                 question.enabled = false;
+                question.answerOption = "999";
               }
-              if (question.idQuestion === 6) {
+              if (question.idQuestion === 7) {
                 question.enabled = false;
+                question.answerOption = "999";
               }
+              if (question.idQuestion === 8) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+              if (question.idQuestion === 9) {
+                question.enabled = false;
+                question.answerOption = "999";
+              }
+
               return question;
             }
           );

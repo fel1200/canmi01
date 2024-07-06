@@ -12,13 +12,29 @@ import { COLORS } from "../utils/constants.js";
 //API methods
 
 export default function RecordItem(props) {
-  const { item, onPressRecordItem, onSelectedItemsChange } = props;
+  const {
+    item,
+    onPressRecordItem,
+    onSelectedItemsChange,
+    typesAgesDaysWeeksMonths,
+    typesAgesYears,
+  } = props;
   //Getting age from questions
   const getAgeFromQuestions = () => {
     const questionAge = item.questions.find((q) => q.idQuestion === 104);
-    const questionAgeText = `Edad: ${
-      questionAge ? questionAge.answerValue : ""
-    } años`;
+
+    //Depending the indicator and the value
+    //we use typesAgesDaysWeeksMonths or
+    //typesAgesYears
+
+    // const questionAgeText = `${
+    //   questionAge ? questionAge.answerValue : ""
+    // } ${
+    //   item.idIndicator === 1 || item.idIndicator === 2
+    const questionAgeText = "";
+
+    //   questionAge ? questionAge.answerValue : ""
+    // }
     return questionAgeText;
   };
 

@@ -9,6 +9,9 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
+
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 import React, { useState, useCallback, useEffect } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -472,6 +475,9 @@ export default function SelectUserScreen({ navigation }) {
             </MyAppText>
           </View>
           <View style={styles.selectUserContainer}>
+            <MyAppText style={styles.textParagraph} typeFont="Regular">
+              Ver 1.0.1
+            </MyAppText>
             <MyAppText style={styles.textParagraph} typeFont="Regular">
               Selecciona
             </MyAppText>

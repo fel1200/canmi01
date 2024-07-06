@@ -64,6 +64,7 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
@@ -78,6 +79,7 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
@@ -92,12 +94,13 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
         idQuestion: 5,
         typeQuestion: 3,
-        Question: "Intervención de estilo de vida exitosa",
+        Question: "Recomendación de modificaciones de estilo de vida",
         subindicator: 1.3,
         nameSubindicator: "Recomendaciones médicas",
         forCalculation: true,
@@ -106,26 +109,13 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
         idQuestion: 6,
         typeQuestion: 3,
-        Question: "Tratamiento farmacológico exitoso",
-        subindicator: 1.4,
-        nameSubindicator: "Recomendaciones quirúrgicas",
-        forCalculation: true,
-        enabled: false,
-        possibleAnswers: [
-          { value: "No", key: "0" },
-          { value: "Sí", key: "1" },
-          { value: "No encontrado", key: "998" },
-        ],
-      },
-      {
-        idQuestion: 7,
-        typeQuestion: 3,
-        Question: "Recomendaciones médicas",
+        Question: "Recomendaciones médicas (tratamiento farmacológico)",
         subindicator: 1.3,
         nameSubindicator: "Recomendaciones médicas",
         forCalculation: true,
@@ -134,24 +124,55 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
+        idQuestion: 7,
+        typeQuestion: 5,
+        Question: "Farmacos recomendados",
+        subindicator: 1.4,
+        nameSubindicator: "",
+        forCalculation: false,
+        enabled: false,
+        possibleAnswers: [],
+      },
+
+      {
         idQuestion: 8,
         typeQuestion: 3,
-        Question: "Recomendaciones quirúrgicas",
+        Question:
+          "Recomendaciones quirúrgicas (Se recomienda cirugia bariátrica",
         subindicator: 1.4,
         nameSubindicator: "Recomendaciones quirúrgicas",
         forCalculation: true,
-        enabled: true,
+        enabled: false,
         possibleAnswers: [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
         idQuestion: 9,
+        typeQuestion: 3,
+        Question:
+          "Registró pérdida de peso (al menos 5% del peso de 3 a 6 meses)",
+        subindicator: 1.4,
+        nameSubindicator: "Recomendaciones médicas",
+        forCalculation: true,
+        enabled: false,
+        possibleAnswers: [
+          { value: "No", key: "0" },
+          { value: "Sí", key: "1" },
+          { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
+        ],
+      },
+
+      {
+        idQuestion: 10,
         typeQuestion: 5,
         Question: "Observaciones",
         subindicator: 0,
@@ -331,7 +352,7 @@ const indicators = [
       {
         idQuestion: 1,
         typeQuestion: 1,
-        Question: "Semana de gestación",
+        Question: "Semana de gestación (de acuerdo a última nota)",
         subindicator: 0,
         nameSubindicator: "",
         forCalculation: false,
@@ -510,7 +531,7 @@ const indicators = [
       {
         idQuestion: 5,
         typeQuestion: 1,
-        Question: "Número de consultas",
+        Question: "Número de consultas médicas",
         subindicator: 5.1,
         nameSubindicator: "Número adecuado de consultas médicas",
         forCalculation: true,
@@ -579,8 +600,22 @@ const indicators = [
       },
       {
         idQuestion: 2,
+        typeQuestion: 3,
+        Question: "Registro de semana de gestación por",
+        subindicator: 0,
+        nameSubindicator: "",
+        forCalculation: false,
+        enabled: true,
+        possibleAnswers: [
+          { value: "USG", key: "0" },
+          { value: "FUM", key: "1" },
+          { value: "No encontrado", key: "998" },
+        ],
+      },
+      {
+        idQuestion: 3,
         typeQuestion: 1,
-        Question: "Valor de IMC",
+        Question: "Valor de IMC (primera nota de embarazo)",
         subindicator: 0,
         nameSubindicator: "",
         forCalculation: false,
@@ -593,7 +628,7 @@ const indicators = [
       },
 
       {
-        idQuestion: 3,
+        idQuestion: 4,
         typeQuestion: 3,
         Question: "Diagnóstico nutricional",
         subindicator: 6.1,
@@ -607,7 +642,7 @@ const indicators = [
         ],
       },
       {
-        idQuestion: 4,
+        idQuestion: 5,
         typeQuestion: 3,
         Question: "Diagnóstico de anemia",
         subindicator: 0,
@@ -621,7 +656,7 @@ const indicators = [
         ],
       },
       {
-        idQuestion: 5,
+        idQuestion: 6,
         typeQuestion: 3,
         Question: "Indicación de hierro",
         subindicator: 6.2,
@@ -635,7 +670,7 @@ const indicators = [
         ],
       },
       {
-        idQuestion: 6,
+        idQuestion: 7,
         typeQuestion: 3,
         Question: "Indicación de ácido fólico",
         subindicator: 6.2,
@@ -649,7 +684,7 @@ const indicators = [
         ],
       },
       {
-        idQuestion: 7,
+        idQuestion: 8,
         typeQuestion: 5,
         forCalculation: false,
         enabled: true,
@@ -937,6 +972,7 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           // { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
@@ -953,6 +989,7 @@ const indicators = [
           { value: "No", key: "0" },
           { value: "Sí", key: "1" },
           // { value: "No encontrado", key: "998" },
+          { value: "No aplica", key: "999" },
         ],
       },
       {
@@ -1712,6 +1749,19 @@ const typesAgesDaysWeeksMonths = [
   },
 ];
 
+const typesGender = [
+  {
+    idTypeGender: 1,
+    key: "F",
+    nameTypeGender: "Femenino",
+  },
+  {
+    idTypeGender: 2,
+    key: "M",
+    nameTypeGender: "Masculino",
+  },
+];
+
 //For picker for years
 //Applicable for women
 
@@ -1764,6 +1814,15 @@ export async function getTypesAge(idIndicator) {
     } else {
       return typesAgesDaysWeeksMonths;
     }
+  } catch (error) {
+    throw error;
+  }
+}
+
+//Method to get types of ages depending the indicator
+export async function getTypesGender() {
+  try {
+    return typesGender;
   } catch (error) {
     throw error;
   }
