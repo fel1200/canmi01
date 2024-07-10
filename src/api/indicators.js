@@ -1925,8 +1925,10 @@ export async function getToken(userApp) {
   try {
     //First we check if we have a token in secure store
     console.log("Entramos a getToken");
-    const token = await SecureStore.getItemAsync("token");
-    // const token = "faketoken";
+    //Comentamos el securestore para probar algo en android
+    //const token = await SecureStore.getItemAsync("token");
+    //Ponemos null porque en algunos casos no funciona el securestore
+    const token = null;
 
     console.log("Token: ", token);
     if (token !== null && token !== undefined) {
