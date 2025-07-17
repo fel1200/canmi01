@@ -77,7 +77,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
           indicatorAnsweredFromProps === undefined ||
           indicatorAnsweredFromProps === null
         ) {
-          //Check if we have an indicator answered in local storage in same stage as current to get info from  idQuestion 101, 102, 103, 104, 105
+          //Check if we have an indicator answered in local storage in same stage as current to get info from  idQuestion 101, 102, 103, 104, 105, 106
           const existingAnswers = await AsyncStorage.getItem(
             "@answersIndicator0.1"
           );
@@ -152,6 +152,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                 indicatorAnsweredSameStageLast.questions.find(
                   (question) => question.idQuestion === 106
                 );
+              console.log("typeGenderPrevious", typeGenderPrevious);
               if (typeGenderPrevious !== undefined) {
                 typeGenderAnswerValue = typeGenderPrevious.answerValue;
               }
@@ -177,6 +178,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
                       numberMethodVerificationAnswerValue = "";
                       ageAnswerValue = "";
                       typeAgeAnswerValue = "";
+                      typeGenderAnswerValue = "";
                       if (indicatorAnswered?.questions !== undefined) {
                         setInputMethodVerification("");
                         setInputAge("");
@@ -336,6 +338,10 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
           if (typeAgeAnswerValue !== "") {
             setTypeAge(typeAgeAnswerValue);
           }
+          //if typeGenderPrevious.answerValue is different from "" we set it
+          if (typeGenderAnswerValue !== "") {
+            setTypeGender(typeGenderAnswerValue);
+          }
         } else {
           //Functionality to load an indicator answered from the records screen
           //We set the indicator answered from the props
@@ -361,6 +367,15 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
           );
           if (typeAge.answerValue !== "") {
             setTypeAge(typeAge.answerValue);
+          }
+          //typeGender
+          const typeGender = indicatorAnsweredFromProps.questions.find(
+            (question) => question.idQuestion === 106
+          );
+          if (typeGender !== undefined) {
+            if (typeGender.answerValue !== "") {
+              setTypeGender(typeGender.answerValue);
+            }
           }
           //Define the last changes saved as true
           setLastChangesSaved(true);
@@ -1770,7 +1785,7 @@ export default function AnswerIndicatorScreen({ navigation, route }) {
               <View style={styles.questionContainer}>
                 {
                   //filter questions with idQuestion different
-                  //from 101, 102, 103, 104 and 105
+                  //from 101, 102, 103, 104 and 105,106
                   //because they are already rendered
                   indicatorAnswered?.questions
                     ?.filter(

@@ -336,9 +336,23 @@ export default function RecordsScreen({ navigation }) {
         //Update records in storage
         (async () => {
           try {
+            //in storage there are all records
+            const recordsStorage = await getRecordsStorage();
+            //update status in recordsStorage
+            const recordsStorageUpdated = recordsStorage.map((record) => {
+              const itemStatus = statusItemsSend.find(
+                (itemSend) => itemSend.id === record.id
+              );
+              if (itemStatus === undefined) {
+                return record;
+              } else {
+                return { ...record, status: itemStatus.status };
+              }
+            });
+            //save recordsStorageUpdated in storage
             await AsyncStorage.setItem(
               "@answersIndicator0.1",
-              JSON.stringify(recordsTemp)
+              JSON.stringify(recordsStorageUpdated)
             );
           } catch (e) {
             console.log("error", e);

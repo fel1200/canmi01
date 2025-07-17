@@ -61,27 +61,28 @@ export const API_HOST_RECORDS =
 //export const API_HOST_TOKEN = "https://devdcm.com/auth/signin";
 export const API_HOST_TOKEN = "https://devfactorydcm.com/auth/signin";
 
-[
-  {
-    answer_option: null,
-    answer_value: "Acas",
-    clue_id: 90001,
-    color: "#CBB7A4",
-    created_at: null,
-    deleted_at: null,
-    device_id: "8412fa99-89f3-485a-a947-a25148f73348",
-    editingAllowed: true,
-    entity_key: 11,
-    error_in_save: "",
-    error_in_send: "",
-    indicator_id: 5,
-    key_municipality: 14,
-    last_name_user_1: "Martinez",
-    last_name_user_2: "Espinosa",
-    name_user: "Juan",
-    question_id: 102,
-    status: "",
-    updated_at: null,
-    user_id: 1,
-  },
-];
+//Fake data to test the app
+// [
+//   {
+//     answer_option: null,
+//     answer_value: "Acas",
+//     clue_id: 90001,
+//     color: "#CBB7A4",
+//     created_at: null,
+//     deleted_at: null,
+//     device_id: "8412fa99-89f3-485a-a947-a25148f73348",
+//     editingAllowed: true,
+//     entity_key: 11,
+//     error_in_save: "",
+//     error_in_send: "",
+//     indicator_id: 5,
+//     key_municipality: 14,
+//     last_name_user_1: "Martinez",
+//     last_name_user_2: "Espinosa",
+//     name_user: "Juan",
+//     question_id: 102,
+//     status: "",
+//     updated_at: null,
+//     user_id: 1,
+//   },
+// ];

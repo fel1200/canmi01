@@ -1,6 +1,6 @@
 //React imports
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 //Checkbox
 import Checkbox from "expo-checkbox";
 //Components

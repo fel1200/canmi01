@@ -2,6 +2,7 @@ import { Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Font from "expo-font";
 
+//Component to use custom fonts in this case we are using Poppins
 export default function MyAppText(props) {
   //For the font loading
   const [fontLoaded, setFontLoaded] = useState(false);

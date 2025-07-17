@@ -1,8 +1,7 @@
-import { API_HOST_USERS, API_HOST } from "../utils/constants";
-
-import axios from "axios";
+import { API_HOST } from "../utils/constants";
 
 //This huge var is used in the case app can't connect to internet
+//and serves to get data from clinics in an offline way
 //So, user is available to execute it offline
 //The app doesn't have login functionality, so we need some generic users
 const clues = [
@@ -109340,6 +109339,8 @@ const clues = [
   },
 ];
 
+//This user generic is defined to access the app
+//because it wasn't required a login functionality in the scope
 const genericUsers = [
   {
     idUser: 1,
@@ -109347,35 +109348,16 @@ const genericUsers = [
     user: "usuario1@correo.com",
     password: "zlw91ineh2qU3uS-@9+$",
   },
-  // {
-  //   idUser: 2,
-  //   name: "Usuario 2",
-  //   user: "usuario2@correo.com",
-  //   password: "ka8R#F+CriDr0#R@TrA2",
-  // },
-  // {
-  //   idUser: 3,
-  //   name: "Usuario 3",
-  //   user: "usuario3@correo.com",
-  //   password: "20apHi&?tH-f7t9=s@If",
-  // },
-  // {
-  //   idUser: 4,
-  //   name: "Usuario 4",
-  //   user: "usuario4@correo.com",
-  //   password: "zlw91ineh2qU3uS-@9+$",
-  // },
 ];
 
 //Function to getStates from internet or locally
 export async function getStates(isConnected) {
   try {
     console.log("Getting entities, isConnected", isConnected);
-    //If it's connected, then we get the data from internet
+    //If is connected, then we get the data from server
     if (isConnected) {
       const url = `${API_HOST}federative_entity`;
       console.log("url de entidades", url);
-      //const response = await fetch(url);
 
       const response = await fetch(url, {
         method: "GET",
@@ -109383,28 +109365,15 @@ export async function getStates(isConnected) {
           Accept: "application/json",
           "Content-Type": "'multipart/form-data'",
         },
-        // body: JSON.stringify({
-        //   email: userApp.user,
-        //   password: userApp.password,
-        // }),
       });
 
       console.log("Response in entities", response);
       const result = response.json();
       console.log("Result in entities", result);
-      // return result;
-      // const config = {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // };
-      // const response = await axios.get(url, config);
-      // console.log("Response in entities", response);
-      // const result = response.json();
 
       return result;
     } else {
-      //Getting data from clues var
+      //Getting data locally from clues var
       //Here we compress the info by state
       const result = clues
         .map((item) => {
@@ -109438,7 +109407,8 @@ export async function getMunicipalities(state, isConnected) {
       return result;
     } else {
       //Getting data from clues var, grouped by municipality
-      //convert state from 1 to "01"
+      //convert state from 1 to "01" in local
+      //because the way in which each data is stored
       state = state.toString().padStart(2, "0");
       const result = clues.filter((item) => {
         return item["CLAVE DE LA ENTIDAD"] === state;

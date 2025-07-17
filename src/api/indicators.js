@@ -10,13 +10,20 @@ import axios from "axios";
 
 //Types of questions
 //1 pregunta abierta númerica
-//2 pregunta abierta texto
+//2 No se usa
 //3 pregunta cerrada opciones sí, no
 //4 no se usa
-//5 pregunta observaciones
+//5 pregunta observaciones y texto
+
+//For the case of the headers questions like
+//expediente, age, gender, etc, are defined
+//directly in the code starting with 100, not in this variable
+
+//some options are commented because they are not used
+//but they are left in case they are needed in the future
 
 //Full info for indicators
-const indicators = [
+export const indicators = [
   {
     idIndicator: 1,
     key: "PTNF148",
@@ -142,7 +149,7 @@ const indicators = [
         idQuestion: 8,
         typeQuestion: 3,
         Question:
-          "Recomendaciones quirúrgicas (Se recomienda cirugia bariátrica",
+          "Recomendaciones quirúrgicas (Se recomienda cirugia bariátrica)",
         subindicator: 1.4,
         nameSubindicator: "Recomendaciones quirúrgicas",
         forCalculation: true,
@@ -1749,6 +1756,7 @@ const typesAgesDaysWeeksMonths = [
   },
 ];
 
+//Picker for genders
 const typesGender = [
   {
     idTypeGender: 1,
@@ -1775,6 +1783,9 @@ const typesAgesYears = [
 
 //Method to get indicators
 //At now only returning an array from a local variable
+//Maybe in the future functionality can be controlled by
+//server side, in this case, we defined locally
+//because a restriction is to use the app offline
 export async function getIndicators() {
   try {
     return indicators;
@@ -1803,13 +1814,15 @@ export async function getIndicatorsSameStage(stage) {
 }
 
 //Method to get types of ages depending the indicator
+//For children, we have days, weeks, months and years
+//For women we have only years
 export async function getTypesAge(idIndicator) {
   try {
     if (
       (idIndicator >= 1 && idIndicator <= 8) ||
       (idIndicator >= 14 && idIndicator <= 16)
     ) {
-      //PreconcepciÃ³n, embarazo, posparto y preescolar
+      //Preconcepción, embarazo, posparto y preescolar
       return typesAgesYears;
     } else {
       return typesAgesDaysWeeksMonths;
@@ -1819,7 +1832,7 @@ export async function getTypesAge(idIndicator) {
   }
 }
 
-//Method to get types of ages depending the indicator
+//Method to get types of gender
 export async function getTypesGender() {
   try {
     return typesGender;
@@ -1866,16 +1879,16 @@ export async function sendIndicator(record, userApp) {
     // }
     questionsToSend.push(newQuestion);
   });
-  console.log("Después de generar: ", questionsToSend);
+  // console.log("Después de generar: ", questionsToSend);
   try {
-    console.log("Entramos al try");
+    // console.log("Entramos al try");
     token = await getToken(userApp);
     if (token == undefined || token == null) {
       throw Error("Error en token");
     }
     const url = `${API_HOST_RECORDS}`;
-    console.log("URL: ", url);
-    console.log("Token: ", token);
+    // console.log("URL: ", url);
+    // console.log("Token: ", token);
     //send each question in questionsToSend
     let bodyToSend = [];
     for (let i = 0; i < questionsToSend.length; i++) {
@@ -1888,11 +1901,11 @@ export async function sendIndicator(record, userApp) {
           Authorization: `Bearer ${token}`,
         },
       };
-      console.log("Body to send: ", bodyToSend);
+      // console.log("Body to send: ", bodyToSend);
       const response = await axios.put(url, bodyToSend, config);
-      console.log("Response sendindicator", response);
+      // console.log("Response sendindicator", response);
       const result = response?.data;
-      console.log("Result: ", result);
+      // console.log("Result: ", result);
       //update status in questionsToSend with the result
       questionsToSend[i].status = result.status;
       //Clean array before sending next
@@ -1920,22 +1933,23 @@ export async function sendIndicator(record, userApp) {
   }
 }
 
-//Method to call an endpoint to get the token, given a user and password, first we check if we have a token, then check if is valid, if not, we get a new one
+//Method to call an endpoint to get the token, given a user and password,
+//first we check if we have a token, then check if is valid, if not, we get a new one
 export async function getToken(userApp) {
   try {
     //First we check if we have a token in secure store
-    console.log("Entramos a getToken");
+    // console.log("Entramos a getToken");
     //Comentamos el securestore para probar algo en android
     //const token = await SecureStore.getItemAsync("token");
     //Ponemos null porque en algunos casos no funciona el securestore
     const token = null;
 
-    console.log("Token: ", token);
+    // console.log("Token: ", token);
     if (token !== null && token !== undefined) {
       //If we have a token, we check if it is valid
-      console.log("Entró a validación de token");
+      // console.log("Entró a validación de token");
       const tokenIsValid = await checkTokenIsValid(token);
-      console.log("Token es válido: ", tokenIsValid);
+      // console.log("Token es válido: ", tokenIsValid);
       if (tokenIsValid) {
         //If token is valid, we return it
         return token;
@@ -1943,7 +1957,7 @@ export async function getToken(userApp) {
         //If token is not valid, we get a new one
 
         const tokenNew = await getNewToken(userApp);
-        console.log("Token nuevo: ", tokenNew);
+        // console.log("Token nuevo: ", tokenNew);
         if (tokenNew === null || tokenNew === undefined) {
           throw Error("Error en generación de token");
         } else {
@@ -1951,7 +1965,7 @@ export async function getToken(userApp) {
         }
       }
     } else {
-      console.log("No hay token");
+      // console.log("No hay token");
       //If we don't have a token, we get a new one
       const tokenNew = await getNewToken(userApp);
       //Check if throw an error then throw it
@@ -1962,7 +1976,7 @@ export async function getToken(userApp) {
       }
     }
   } catch (error) {
-    console.log("Error thrown ", error);
+    // console.log("Error thrown ", error);
     throw error;
   }
 }
@@ -1990,18 +2004,12 @@ export async function checkTokenIsValid(token) {
 //Method to get a new token
 export async function getNewToken(userApp) {
   try {
-    console.log("Antes del nuevo token", userApp);
-    console.log("API_HOST_TOKEN", API_HOST_TOKEN);
-    console.log(
-      "Body",
-      JSON.stringify({ email: userApp.user, password: userApp.password })
-    );
-
-    //// Connection that works in android
-    // const response = await axios.post(API_HOST_TOKEN, {
-    //   email: userApp.user,
-    //   password: userApp.password,
-    // });
+    // console.log("Antes del nuevo token", userApp);
+    // console.log("API_HOST_TOKEN", API_HOST_TOKEN);
+    // console.log(
+    //   "Body",
+    //   JSON.stringify({ email: userApp.user, password: userApp.password })
+    // );
 
     const response = await fetch(API_HOST_TOKEN, {
       method: "POST",
@@ -2013,9 +2021,9 @@ export async function getNewToken(userApp) {
         password: userApp.password,
       }),
     });
-    console.log("Entró a generar new token", API_HOST_TOKEN);
+    // console.log("Entró a generar new token", API_HOST_TOKEN);
     const responseJson = await response.json();
-    console.log("Respuesta: ", responseJson);
+    // console.log("Respuesta: ", responseJson);
 
     // const url = `${API_HOST_TOKEN}`;
     // const response = await fetch(url);
@@ -2027,7 +2035,7 @@ export async function getNewToken(userApp) {
       await SecureStore.setItemAsync("token", responseJson?.data?.token);
       return responseJson?.data?.token;
     } else {
-      console.log("Error en generación de token");
+      // console.log("Error en generación de token");
       throw Error("Error en generación de token");
     }
   } catch (error) {

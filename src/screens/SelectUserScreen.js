@@ -10,8 +10,6 @@ import {
   TextInput,
 } from "react-native";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
-
 import React, { useState, useCallback, useEffect } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,6 +27,8 @@ import {
   getClinics,
   getUsers,
 } from "../api/clinicUsers";
+
+import { indicators } from "../api/indicators";
 
 //Customized text
 import MyAppText from "../components/componentStyles/MyAppText";
@@ -50,24 +50,10 @@ export default function SelectUserScreen({ navigation }) {
   //var to check if it was tried the connection
   const [triedConnection, setTriedConnection] = useState(false);
 
-  //Check if there is internet connection
-  // useEffect(() => {
-  //   (async () => {
-  //     const isConnectedCheck = await checkInternetConnection();
-  //     setIsConnected(isConnectedCheck);
-  //   })();
-  // }, []);
-
   //Method to check internet connection
   const checkInternetConnection = async () => {
     try {
       const response = await fetch("https://www.google.com");
-      // const contentType = response.headers.get("content-type");
-      // const raw = await response.blob();
-      // console.log("Raw", raw);
-      // console.log("Content type", contentType);
-
-      // console.log("Response", response);
       console.log("Status", response.status);
       if (response.status === 200) {
         console.log("Entró");
@@ -80,15 +66,77 @@ export default function SelectUserScreen({ navigation }) {
       return false;
     }
   };
-  // console.log("isConnected", isConnected);
 
   //Const to get states from API
   const [states, setStates] = useState([]);
   const [loadingStates, setLoadingStates] = useState(false);
 
+  //Method to create a csv file from indicators local data
+  //Activate here if you want that the console shows the output
+  //To create the CSV File
+  //And activate it in the useEffect method
+
+  //function to go through indicators to create
+  //csv file to upload to the server
+  // const createCSV = async () => {
+  //   try {
+  //     let csvContentForLog = "";
+  //     let csvAnswersForLog = "";
+  //     console.log("Indicators", indicators);
+  //     const data = indicators;
+  //     console.log("Data", data);
+  //     let counterForId = 1;
+  //     let counterForIdAnswers = 1;
+  //     data.forEach((indicator) => {
+  //       //Start creating the csv file
+  //       console.log("Indicator", indicator);
+  //       indicator.questions.forEach((question) => {
+  //         console.log("Question:", question);
+  //         csvContentForLog += `${counterForId};${question.Question};${
+  //           question.typeQuestion
+  //         };${
+  //           indicator.idIndicator
+  //         };${"true"};'2023-06-10 01:17:29.226844+00';'2023-06-10 01:17:29.226844+00';${
+  //           question.idQuestion
+  //         }\n`;
+  //         // console.log("partial csvContentForLog", csvContentForLog);
+  //         if (
+  //           question.possibleAnswers.length === 0 &&
+  //           question.typeQuestion === 5
+  //         ) {
+  //           console.log("No hay posibles respuestas");
+  //           csvAnswersForLog += `${counterForIdAnswers};${counterForId};${"value"};${""};${
+  //             question.Question
+  //           };'2023-06-10 01:17:29.226844+00';'2023-06-10 01:17:29.226844+00'\n`;
+  //           counterForIdAnswers++;
+  //         }
+
+  //         question.possibleAnswers.forEach((possibleAnswer) => {
+  //           console.log("Possible Answer", possibleAnswer);
+  //           csvAnswersForLog += `${counterForIdAnswers};${counterForId};${
+  //             possibleAnswer.value
+  //           };${possibleAnswer.value === "value" ? "" : possibleAnswer.key};${
+  //             possibleAnswer.placeholder ? possibleAnswer.placeholder : ""
+  //           };'2023-06-10 01:17:29.226844+00';'2023-06-10 01:17:29.226844+00'\n`;
+  //           counterForIdAnswers++;
+  //         });
+  //         counterForId++;
+  //       });
+  //     });
+  //     console.log("csvContentForLog", csvContentForLog);
+  //     console.log("csvAnswersForLog", csvAnswersForLog);
+  //   } catch (error) {
+  //     console.log("Error to get indicators", error);
+  //   }
+  // };
+
   // Getting states from API
   useEffect(() => {
     (async () => {
+      //Method to create a csv file from indicators local data
+      //Activate if you want that the console shows the output
+      //To create the CSV File
+      //createCSV();
       //Check if there is internet connection
       if (triedConnection == false) {
         const isConnected = await checkInternetConnection();
@@ -346,7 +394,6 @@ export default function SelectUserScreen({ navigation }) {
   };
 
   //Vars and methods to handle when user press login
-
   //Handling buttons press
   //Go to main indicators screen, a "login"
   const goToMainScreen = () => {
@@ -476,7 +523,7 @@ export default function SelectUserScreen({ navigation }) {
           </View>
           <View style={styles.selectUserContainer}>
             <MyAppText style={styles.textParagraph} typeFont="Regular">
-              Ver 1.0.1
+              Ver 1.0.3
             </MyAppText>
             <MyAppText style={styles.textParagraph} typeFont="Regular">
               Selecciona

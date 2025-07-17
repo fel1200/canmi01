@@ -15,11 +15,6 @@ import { COLORS } from "../utils/constants.js";
 import MyAppText from "./componentStyles/MyAppText.js";
 
 //Types:
-//1 pregunta abierta númerica
-//2 pregunta abierta texto ((not used))
-//3 pregunta cerrada opciones múltiples sí, no, etc
-//4 pregunta cerrada opciones múltiples  ((not used))
-//5 Input para observaciones
 
 export default function AnswerComponent(props) {
   //First getting info from props
@@ -37,7 +32,7 @@ export default function AnswerComponent(props) {
     }
   };
 
-  //Method to define the answer of the button, depending the options
+  //Method to define the width of the button, depending the options
   const widthAnswer = () => {
     const numberFilteredAnswers = item.possibleAnswers.filter(
       (item) => item.value !== "No encontrado" && item.value !== "No aplica"
@@ -217,9 +212,6 @@ export default function AnswerComponent(props) {
           if (question.idQuestion === 5) {
             question.enabled = valueEnabled;
           }
-          // if (question.idQuestion === 6) {
-          //   question.enabled = valueEnabled;
-          // }
           if (question.idQuestion === 7) {
             if (valueEnabled === false) {
               question.answerOption = "999";

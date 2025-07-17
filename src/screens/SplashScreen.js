@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     width: 320,
     alignItems: "center",
+    zIndex: 1,
   },
   textMain: {
     fontSize: 45,
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: -1,
   },
   logoIberoImg: {
     width: 100,
